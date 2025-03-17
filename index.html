@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: "Times New Roman", serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f1e8;
+            color: #333;
+        }
+        h2, h3 {
+            text-align: center;
+            font-weight: bold;
+        }
+        .container {
+            background: #fff8dc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #8b4513;
+        }
+        input, select, button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #8b4513;
+            border-radius: 5px;
+            font-family: "Times New Roman", serif;
+            font-size: 16px;
+        }
+        button {
+            background-color: #8b4513;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5a2e0f;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 2px solid #8b4513;
+        }
+        th, td {
+            border: 1px solid #8b4513;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #8b4513;
+            color: white;
+            font-weight: bold;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Monthly Expense Tracker</h2>
+        <label>Expense Name:</label>
+        <input type="text" id="expenseName" placeholder="Enter expense name">
+        <label>Amount:</label>
+        <input type="number" id="expenseAmount" placeholder="Enter amount">
+        <label>Category:</label>
+        <select id="expenseCategory">
+            <option value="Food">Food</option>
+            <option value="Bills">Bills</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Others">Others</option>
+        </select>
+        <button onclick="addExpense()">Add Expense</button>
+        
+        <h3>Expense List</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="expenseTable"></tbody>
+        </table>
+        
+        <div class="total">Total: RM<span id="totalAmount">0</span></div>
+    </div>
+    
+    <script>
+        let total = 0;
+        let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+        function addExpense() {
+            let name = document.getElementById("expenseName").value;
+            let amount = parseFloat(document.getElementById("expenseAmount").value);
+            let category = document.getElementById("expenseCategory").value;
+            
+            if (name && amount) {
+                let expense = { name, amount, category };
+                expenses.push(expense);
+                localStorage.setItem("expenses", JSON.stringify(expenses));
+                renderExpenses();
+                document.getElementById("expenseName").value = "";
+                document.getElementById("expenseAmount").value = "";
+            }
+        }
+
+        function deleteExpense(index) {
+            expenses.splice(index, 1);
+            localStorage.setItem("expenses", JSON.stringify(expenses));
+            renderExpenses();
+        }
+
+        function renderExpenses() {
+            let table = document.getElementById("expenseTable");
+            table.innerHTML = "";
+            total = 0;
+            expenses.forEach((expense, index) => {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = expense.name;
+                row.insertCell(1).innerText = "RM" + expense.amount.toFixed(2);
+                row.insertCell(2).innerText = expense.category;
+                let deleteCell = row.insertCell(3);
+                let deleteButton = document.createElement("button");
+                deleteButton.innerText = "Delete";
+                deleteButton.onclick = () => deleteExpense(index);
+                deleteButton.style.backgroundColor = "red";
+                deleteButton.style.color = "white";
+                deleteButton.style.border = "none";
+                deleteButton.style.padding = "5px 10px";
+                deleteButton.style.cursor = "pointer";
+                deleteCell.appendChild(deleteButton);
+                total += expense.amount;
+            });
+            document.getElementById("totalAmount").innerText = total.toFixed(2);
+        }
+
+        document.addEventListener("DOMContentLoaded", renderExpenses);
+    </script>
+</body>
+</html>
