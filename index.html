@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <title>Loan Payment Tracker</title>
     <style>
         body {
             font-family: "Times New Roman", serif;
             max-width: 600px;
             margin: auto;
             padding: 20px;
-            background: url('https://source.unsplash.com/1600x900/?finance,money') no-repeat center center fixed;
+            background: url('https://source.unsplash.com/1600x900/?finance,loan') no-repeat center center fixed;
             background-size: cover;
             color: #333;
         }
@@ -25,26 +24,6 @@
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
             border: 2px solid #8b4513;
-        }
-        .expense-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #8b4513;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #5a2e0f;
         }
         table {
             width: 100%;
@@ -71,71 +50,51 @@
             text-align: center;
             margin-top: 10px;
         }
-        #chart_div {
-            width: 100%;
-            height: 300px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Monthly Expense Tracker</h2>
-        <h3>Select an Expense</h3>
-        <div class="expense-buttons">
-            <button onclick="addFixedExpense('Axia (Car)', 537)">Axia (Car) - RM537</button>
-            <button onclick="addFixedExpense('LC 135 (Motor)', 232)">LC 135 (Motor) - RM232</button>
-            <button onclick="addFixedExpense('Room Rental', 350)">Room Rental - RM350</button>
-            <button onclick="addFixedExpense('Car Insurance', 150)">Car Insurance - RM150</button>
-        </div>
-        
-        <h3>Expense List</h3>
+        <h2>Loan Payment Tracker</h2>
+        <h3>Loan Details</h3>
         <table>
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Amount</th>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Action</th>
+                    <th>Duration</th>
+                    <th>Remaining Months</th>
                 </tr>
             </thead>
-            <tbody id="expenseTable"></tbody>
+            <tbody id="loanTable"></tbody>
         </table>
-        
-        <div class="total">Total: RM<span id="totalAmount">0</span></div>
-        <h3>Expense Chart</h3>
-        <div id="chart_div"></div>
+        <div class="total">Total Monthly Loan: RM<span id="totalLoan">0</span></div>
     </div>
 
     <script>
-        let expenses = [];
-        function addFixedExpense(category, amount) {
-            const date = new Date().toISOString().split('T')[0];
-            const expense = { name: category, amount, date, category };
-            expenses.push(expense);
-            renderExpenses();
-        }
-        function renderExpenses() {
-            const table = document.getElementById("expenseTable");
+        let loans = [
+            { name: "Car Loan (Axia)", amount: 537, duration: 108, remaining: 108 },
+            { name: "Motor Loan (LC 135)", amount: 232, duration: 60, remaining: 60 },
+            { name: "Phone Loan", amount: 205, duration: 36, remaining: 36 }
+        ];
+
+        function renderLoans() {
+            const table = document.getElementById("loanTable");
             table.innerHTML = "";
-            let total = 0;
-            expenses.forEach((expense, index) => {
-                total += expense.amount;
+            let totalLoan = 0;
+            loans.forEach((loan, index) => {
+                totalLoan += loan.amount;
                 const row = `<tr>
-                    <td>${expense.name}</td>
-                    <td>RM${expense.amount}</td>
-                    <td>${expense.date}</td>
-                    <td>${expense.category}</td>
-                    <td><button onclick="removeExpense(${index})">Remove</button></td>
+                    <td>${loan.name}</td>
+                    <td>RM${loan.amount}</td>
+                    <td>${loan.duration} months</td>
+                    <td>${loan.remaining}</td>
                 </tr>`;
                 table.innerHTML += row;
             });
-            document.getElementById("totalAmount").innerText = total;
+            document.getElementById("totalLoan").innerText = totalLoan;
         }
-        function removeExpense(index) {
-            expenses.splice(index, 1);
-            renderExpenses();
-        }
+        
+        renderLoans();
     </script>
 </body>
 </html>
