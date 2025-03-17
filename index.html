@@ -26,20 +26,22 @@
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
             border: 2px solid #8b4513;
         }
-        input, select, button {
-            margin: 5px 0;
-            padding: 10px;
-            width: 100%;
-            border: 1px solid #8b4513;
-            border-radius: 5px;
-            font-family: "Times New Roman", serif;
-            font-size: 16px;
+        .expense-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
         }
         button {
             background-color: #8b4513;
             color: white;
             font-weight: bold;
             cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
         }
         button:hover {
             background-color: #5a2e0f;
@@ -78,33 +80,13 @@
 <body>
     <div class="container">
         <h2>Monthly Expense Tracker</h2>
-        <label>Expense Name:</label>
-        <input type="text" id="expenseName" placeholder="Enter expense name">
-        <label>Amount:</label>
-        <input type="number" id="expenseAmount" placeholder="Enter amount">
-        <label>Date:</label>
-        <input type="date" id="expenseDate">
-        <label>Category:</label>
-        <select id="expenseCategory">
-            <option value="Food">Food</option>
-            <option value="Bills">Bills</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Car">Car</option>
-            <option value="Motor">Motor</option>
-            <option value="Others">Others</option>
-        </select>
-        <button onclick="addExpense()">Add Expense</button>
-        
-        <h3>Filter by Category</h3>
-        <select id="filterCategory" onchange="renderExpenses()">
-            <option value="All">All</option>
-            <option value="Food">Food</option>
-            <option value="Bills">Bills</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Car">Car</option>
-            <option value="Motor">Motor</option>
-            <option value="Others">Others</option>
-        </select>
+        <h3>Select an Expense</h3>
+        <div class="expense-buttons">
+            <button onclick="addFixedExpense('Axia (Car)', 537)">Axia (Car) - RM537</button>
+            <button onclick="addFixedExpense('LC 135 (Motor)', 232)">LC 135 (Motor) - RM232</button>
+            <button onclick="addFixedExpense('Room Rental', 350)">Room Rental - RM350</button>
+            <button onclick="addFixedExpense('Car Insurance', 150)">Car Insurance - RM150</button>
+        </div>
         
         <h3>Expense List</h3>
         <table>
@@ -124,5 +106,36 @@
         <h3>Expense Chart</h3>
         <div id="chart_div"></div>
     </div>
+
+    <script>
+        let expenses = [];
+        function addFixedExpense(category, amount) {
+            const date = new Date().toISOString().split('T')[0];
+            const expense = { name: category, amount, date, category };
+            expenses.push(expense);
+            renderExpenses();
+        }
+        function renderExpenses() {
+            const table = document.getElementById("expenseTable");
+            table.innerHTML = "";
+            let total = 0;
+            expenses.forEach((expense, index) => {
+                total += expense.amount;
+                const row = `<tr>
+                    <td>${expense.name}</td>
+                    <td>RM${expense.amount}</td>
+                    <td>${expense.date}</td>
+                    <td>${expense.category}</td>
+                    <td><button onclick="removeExpense(${index})">Remove</button></td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+            document.getElementById("totalAmount").innerText = total;
+        }
+        function removeExpense(index) {
+            expenses.splice(index, 1);
+            renderExpenses();
+        }
+    </script>
 </body>
 </html>
