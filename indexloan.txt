@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Payment Tracker</title>
+    <style>
+        body {
+            font-family: "Times New Roman", serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: url('https://source.unsplash.com/1600x900/?finance,loan') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        h2, h3 {
+            text-align: center;
+            font-weight: bold;
+        }
+        .container {
+            background: rgba(255, 248, 220, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #8b4513;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 2px solid #8b4513;
+        }
+        th, td {
+            border: 1px solid #8b4513;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #8b4513;
+            color: white;
+            font-weight: bold;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Loan Payment Tracker</h2>
+        <h3>Loan Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Duration</th>
+                    <th>Remaining Months</th>
+                </tr>
+            </thead>
+            <tbody id="loanTable"></tbody>
+        </table>
+        <div class="total">Total Monthly Loan: RM<span id="totalLoan">0</span></div>
+    </div>
+
+    <script>
+        let loans = [
+            { name: "Car Loan (Axia)", amount: 537, duration: 108, remaining: 108 },
+            { name: "Motor Loan (LC 135)", amount: 232, duration: 60, remaining: 60 },
+            { name: "Phone Loan", amount: 205, duration: 36, remaining: 36 }
+        ];
+
+        function renderLoans() {
+            const table = document.getElementById("loanTable");
+            table.innerHTML = "";
+            let totalLoan = 0;
+            loans.forEach((loan, index) => {
+                totalLoan += loan.amount;
+                const row = `<tr>
+                    <td>${loan.name}</td>
+                    <td>RM${loan.amount}</td>
+                    <td>${loan.duration} months</td>
+                    <td>${loan.remaining}</td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+            document.getElementById("totalLoan").innerText = totalLoan;
+        }
+        
+        renderLoans();
+    </script>
+</body>
+</html>
